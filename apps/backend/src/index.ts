@@ -1,12 +1,13 @@
 import http from 'node:http';
 import express from 'express';
 import cors from 'cors';
-import { Server } from 'colyseus';
+import { Server, LobbyRoom } from 'colyseus';
 import { WebSocketTransport } from '@colyseus/ws-transport';
 import { monitor } from '@colyseus/monitor';
 
 import { PORT, NODE_ENV } from './config.js';
 import { GameRoom } from './rooms/GameRoom.js';
+import { Game1v1Room } from './rooms/Game1v1Room.js';
 
 const app = express();
 const server = http.createServer(app);
@@ -21,7 +22,14 @@ app.get('/health', (_req, res) => {
 const transport = new WebSocketTransport({ server });
 const gameServer = new Server({ transport });
 
+// Define lobby room for room listing
+gameServer.define('lobby', LobbyRoom);
+
+// Keep legacy game room (for backwards compatibility)
 gameServer.define('game_room', GameRoom);
+
+// Define 1v1 game room with realtime listing enabled
+gameServer.define('game_1v1', Game1v1Room).enableRealtimeListing();
 
 if (NODE_ENV === 'development') {
   app.use('/monitor', monitor());

@@ -5,9 +5,11 @@ export interface Position {
 
 export interface Player {
   id: string;
+  clientId: string;
   name: string;
   color: string;
   resources: number;
+  connected: boolean;
 }
 
 export interface Unit {
@@ -55,3 +57,20 @@ export type ServerMessage =
   | { type: 'buildingPlaced'; building: Building }
   | { type: 'buildingDestroyed'; buildingId: string }
   | { type: 'resourcesUpdated'; playerId: string; resources: number };
+
+// Room status for game state
+export type RoomStatus = 'waiting' | 'running' | 'finished';
+
+// Join options required by game room
+export interface GameJoinOptions {
+  clientId: string;
+  name?: string;
+}
+
+// Session persistence for reconnect
+export interface SessionData {
+  clientId: string;
+  reconnectionToken: string;
+  roomId: string;
+  name: string;
+}

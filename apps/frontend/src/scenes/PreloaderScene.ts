@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { ConnectionService } from '../services/ConnectionService';
 
 export class PreloaderScene extends Phaser.Scene {
   constructor() {
@@ -33,7 +34,17 @@ export class PreloaderScene extends Phaser.Scene {
     });
   }
 
-  create(): void {
-    this.scene.start('GameScene');
+  async create(): Promise<void> {
+    // Try to reconnect to existing session
+    const room = await ConnectionService.tryReconnect();
+
+    if (room) {
+      // Reconnection successful - go directly to game
+      console.log('Reconnected to room:', room.id);
+      this.scene.start('GameScene', { room });
+    } else {
+      // No session or reconnection failed - go to lobby
+      this.scene.start('LobbyScene');
+    }
   }
 }
