@@ -79,3 +79,5 @@ pkill -f "vite"           # Kill frontend dev server
 Or use Ctrl+C in the terminal running `pnpm dev`.
 
 Always use Context7 MCP when I need library/API documentation, code generation, setup or configuration steps without me having to explicitly ask.
+
+If you need to generate images refer to images/AGENTS.MD for details
